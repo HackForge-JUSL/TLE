@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 import peer from "../service/peer"
 import { useSocket } from "../context/SocketProvider";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const RoomPage = () => {
 
@@ -49,10 +50,17 @@ const RoomPage = () => {
   }
 
   const sendStreams = useCallback(() => {
-    for (const track of myStream.getTracks()) {
-      peer.peer.addTrack(track, myStream);
+    if (myStream) {
+      const tracks = myStream.getTracks();
+      tracks.forEach((track) => {
+        // Check if the track is already added
+        const sender = peer.peer.getSenders().find((s) => s.track === track);
+        if (!sender) {
+          peer.peer.addTrack(track, myStream);
+        }
+      });
     }
-  }, [myStream]);
+  }, [myStream, peer.peer]);
 
   const handleCallAccepted = useCallback(
     ({ from, ans }) => {
@@ -85,6 +93,24 @@ const RoomPage = () => {
 
   const handleNegoNeedFinal = useCallback(async ({ ans }) => {
     await peer.setLocalDescription(ans);
+  
+    const canvas = document.createElement('canvas');
+    const video = document.querySelector('video'); // Assuming you have a <video> element displaying the remote stream
+    const ctx = canvas.getContext('2d');
+  
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const intervalId = setTimeout(() => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Get the image data from the canvas
+      const imageData = canvas.toDataURL('image/jpeg');
+      console.log(JSON.stringify({ imageData }));
+
+      const res = axios.post('http://localhost:2100/uploadImage', {imageData});
+    }, 50);
+
   }, []);
 
   useEffect(() => {
