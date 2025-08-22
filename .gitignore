@@ -1,16 +1,17 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-client/Capable Connect/node_modules/*
-client/Capable Connect/node_modules/*
-client/Capable Connect/UsersvivekAppDataRoamingnpm/*
-client/Capable Connect/UsersvivekAppDataRoamingnpm-cache/*
-server/node_modules/*
-server/UsersvivekAppDataRoamingnpm-cache/*
->>>>>>> a7ae8a62cfddce15a86ff7edcbed95d196d67d21
-=======
-node_modules
-client/Capable Connect/UsersvivekAppDataRoamingnpm-cache/*
-server/UsersvivekAppDataRoamingnpm-cache/*
-client/Capable Connect/UsersvivekAppDataRoamingnpm/*
-client/Capable Connect/node_modules/*
->>>>>>> dev
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Node
+node_modules/
+
+# Data/weights/outputs
+models/*
+!models/.gitkeep
+data/
+outputs/
+
+# Jupyter
+.ipynb_checkpoints/
